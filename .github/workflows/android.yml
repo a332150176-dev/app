@@ -1,10 +1,10 @@
-name: Build Android APK
+name: Build Android APK and update fixed Release
 on:
   push:
     branches: [main]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 defaults:
   run:
     shell: bash
@@ -42,14 +42,41 @@ jobs:
           s = p.read_text(encoding='utf-8')
           perm = '    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />'
           if 'android.permission.SCHEDULE_EXACT_ALARM' not in s:
-              s = s.replace('<application', perm + '\n    <application', 1)
+              s = s.replace('<application', perm + '\\n    <application', 1)
           p.write_text(s, encoding='utf-8')
           PY
+      # Use one fixed signing key so the APK signature remains stable between CI runners.
+      # This is a development/debug signing key for this project, not a production app-store key.
+      - name: Configure stable debug signing key
+        run: |
+          mkdir -p "$HOME/.android"
+          base64 --decode signing/debug.keystore.b64 > "$HOME/.android/debug.keystore"
+          chmod 600 "$HOME/.android/debug.keystore"
       - name: Compile debug APK
         run: cd android && ./gradlew --no-daemon assembleDebug
-      - uses: actions/upload-artifact@v4
+      - name: Verify APK signature
+        run: |
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs android/app/build/outputs/apk/debug/app-debug.apk
+      - name: Keep Actions artifact as fallback
+        uses: actions/upload-artifact@v4
         with:
           name: kav-leyeshiva-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
+      - name: Publish or update the fixed GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: latest-apk
+          target_commitish: main
+          name: קו לישיבה — הורדה ישירה
+          body: |
+            הורדה ישירה של קובץ ה-APK העדכני של פרויקט קו לישיבה.
+            
+            הקובץ מתעדכן אוטומטית לאחר כל בנייה מוצלחת. הורידו את app-debug.apk תחת Assets.
+            
+            זוהי גרסת Debug להתקנה ידנית, חתומה במפתח פיתוח קבוע עבור הפרויקט.
+          files: android/app/build/outputs/apk/debug/app-debug.apk
+          fail_on_unmatched_files: true
+          overwrite_files: true
+          make_latest: true
