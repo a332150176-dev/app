@@ -3,3 +3,47 @@
 @media(max-width:1120px){.main-area,main{padding:26px 19px;margin-inline-start:220px}.sidebar{width:220px}.stats{gap:9px}.stat{padding:14px}.stat b{font-size:22px}.columns{grid-template-columns:minmax(0,1.4fr) minmax(235px,.9fr)}}
 @media(max-width:800px){.sidebar{display:none}.main-area,main{margin:0;padding:15px 15px 88px}.mobile-brand{display:flex;align-items:center;gap:8px;font-size:15px}.mobile-brand .logo{width:34px;height:34px;border-radius:10px;font-size:22px}.top{flex-wrap:wrap;gap:11px;margin-bottom:20px}.top>div:nth-child(2){order:3;width:100%}.top h1{font-size:22px}.top p{font-size:11px}.actions{margin-inline-start:auto}.actions .btn{min-height:37px;padding:7px 10px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{padding:13px;border-radius:14px}.stat b{font-size:22px;margin:10px 0 4px}.stat label{font-size:10px}.stat small{font-size:9px}.columns{grid-template-columns:1fr;gap:13px}.mobile-nav{display:flex;position:fixed;z-index:20;inset:auto 0 0;height:65px;padding:6px 9px calc(6px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line);justify-content:space-around;align-items:center;box-shadow:0 -6px 22px #20345408}.mobile-nav .nav{flex:1;display:flex;flex-direction:column;text-align:center;align-items:center;justify-content:center;gap:3px;padding:7px 3px;font-size:17px;border-radius:9px}.mobile-nav .nav small{font-size:9px}.page-toolbar,.toolbar{flex-wrap:wrap}.toolbar input{flex-basis:100%;order:1}.toolbar select{flex:1;max-width:none}.toolbar>.btn{flex:none}.settings{grid-template-columns:1fr}.booking-item{padding:13px 12px;grid-template-columns:43px minmax(0,1fr);gap:9px}.date-badge{width:42px;min-height:46px}.booking-main h3{font-size:12px}.price{grid-column:2;display:flex;align-items:center;text-align:right;gap:9px}.price small{margin:0}.row{grid-template-columns:43px minmax(0,1fr);padding:13px}.row .ops{grid-column:2;grid-row:auto;flex-direction:row;flex-wrap:wrap}.row .money{grid-column:2}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}#form{padding:19px 15px 15px}.live{gap:4px;padding:10px 8px}.live span{font-size:8px}.live b{font-size:12px}.dialog-actions button{flex:1}.dialog-actions button{min-width:0}#toast{bottom:82px;right:14px}}
 @media(max-width:390px){.main-area,main{padding-inline:10px}.stat{padding:11px}.stat b{font-size:19px}.actions .btn{font-size:10px}.panel-title{padding:14px}.booking-item{grid-template-columns:39px minmax(0,1fr);padding:12px 10px}.date-badge{width:38px}.booking-main h3{font-size:11px}}
+
+/* Theme preference: follow device, light, or dark */
+:root{color-scheme:light}
+body{background:#f4f6fb;color:#1c263a;transition:background-color .18s,color .18s}
+.home-stats{grid-template-columns:repeat(2,minmax(0,1fr));max-width:520px}
+.date-detail{display:block;margin-top:3px;line-height:1.65;color:var(--muted);font-size:10px}
+.hebrew-date{display:block;color:var(--violet);font-weight:600}
+.date-preview{border:1px solid var(--line);background:var(--surface2);border-radius:9px;padding:9px 10px;font-size:10px;line-height:1.8;color:var(--muted)}
+.date-preview .hebrew-date{display:block;color:var(--violet);font-weight:700}
+.appearance-panel{margin-bottom:16px}
+.theme-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:12px}
+.theme-choice{border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);padding:12px 8px;text-align:center;min-width:0}
+.theme-choice.selected{border-color:var(--blue);background:var(--blue-soft,#edf1ff);box-shadow:0 0 0 2px rgba(65,105,245,.10)}
+.theme-symbol{display:block;font-size:22px;margin-bottom:5px}
+.theme-choice b{display:block;font-size:12px}
+.theme-choice small{display:block;font-size:10px;color:var(--muted);margin-top:4px}
+#show-hebrew-date{width:18px;height:18px;accent-color:var(--blue)}
+body.dark{color-scheme:dark;background:#101725;color:#edf2fc;--navy:#0b1120;--muted:#a4b0c5;--line:#2a3951;--blue:#83a0ff;--violet:#b9a7ff;--green:#55d8a0;--amber:#ffca76}
+body.dark main{background:#101725;color:#edf2fc}
+body.dark .panel,body.dark .stat,body.dark .booking-item,body.dark .row{background:#192336;color:#edf2fc;border-color:#2a3951}
+body.dark .panel-title,body.dark .booking-item,body.dark .row,body.dark .reminder,body.dark .toggle{border-color:#2a3951}
+body.dark .field input,body.dark .field select,body.dark .field textarea,body.dark .toolbar input,body.dark .toolbar select,body.dark .small,body.dark .btn.ghost,body.dark .btn:not(.primary),body.dark .backup-option{background:#192336;color:#edf2fc;border-color:#2a3951}
+body.dark .table th{background:#202c41;color:#a4b0c5}
+body.dark .table td{border-color:#2a3951;color:#edf2fc}
+body.dark .table td span,body.dark .meta,body.dark .intro,body.dark .subtitle,body.dark .helper{color:#a4b0c5}
+body.dark .empty h3,body.dark .row .money b,body.dark .dialog-head h2{color:#edf2fc}
+body.dark .hint{background:#202c41;border-color:#2a3951;color:#c2cdec}
+body.dark .warning{background:#382f1f;border-color:#53452d;color:#ffca76}
+body.dark .date-badge,body.dark .date-preview,body.dark .live{background:#29395d;border-color:#2a3951;color:#dbe5ff}
+body.dark .pill.s-new{background:#45351f;color:#ffca76}
+body.dark .pill.s-booked{background:#29395d;color:#b9c9ff}
+body.dark .pill.s-driver-informed,body.dark .pill.s-paid{background:#183d35;color:#55d8a0}
+body.dark .pill.s-completed{background:#293346;color:#c2cee2}
+body.dark .theme-choice{background:#192336;color:#edf2fc;border-color:#2a3951}
+body.dark .theme-choice.selected{background:#29395d;border-color:#83a0ff}
+body.dark .appearance-panel .toggle{color:#edf2fc}
+body.dark dialog::backdrop{background:#030712c9}
+body.dark #form{background:#192336;color:#edf2fc}
+body.dark .close{background:#202c41;color:#edf2fc;border-color:#2a3951}
+body.dark .mobile-nav{background:#111a2a;border-color:#2a3951}
+body.dark .mobile-nav .nav.active{background:#29395d;color:#b9c9ff}
+body.dark .sidebar .nav.active{background:#2a3a60;color:white}
+body.dark .price small,body.dark .profit{color:#55d8a0}
+@media(max-width:800px){.home-stats{max-width:none}.theme-options{gap:6px}.theme-choice{padding:10px 5px}.theme-choice b{font-size:11px}}
