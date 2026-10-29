@@ -5,14 +5,14 @@
   "description": "ניהול הסעות לחתונות בישיבה",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "build": "vite build"
+    "dev": "vite web --host 0.0.0.0",
+    "build": "vite build web --outDir ../dist --emptyOutDir"
   },
   "dependencies": {
     "@capacitor/android": "^8.0.0",
     "@capacitor/core": "^8.0.0",
     "@capacitor/filesystem": "^8.0.0",
-    "@capacitor/local-notifications": "^8.3.1",
+    "@capacitor/local-notifications": "^8.0.0",
     "@capacitor/share": "^8.0.0"
   },
   "devDependencies": {
