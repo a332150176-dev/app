@@ -47,3 +47,47 @@ body.dark .mobile-nav .nav.active{background:#29395d;color:#b9c9ff}
 body.dark .sidebar .nav.active{background:#2a3a60;color:white}
 body.dark .price small,body.dark .profit{color:#55d8a0}
 @media(max-width:800px){.home-stats{max-width:none}.theme-options{gap:6px}.theme-choice{padding:10px 5px}.theme-choice b{font-size:11px}}
+
+
+/* Compact layout for very small phones: save vertical space without shrinking tap targets */
+@media(max-width:390px){
+  .main-area,main{padding:10px 10px calc(76px + env(safe-area-inset-bottom))}
+  .top{gap:6px;margin-bottom:12px}
+  .mobile-brand{gap:6px;font-size:14px}
+  .mobile-brand .logo{width:30px;height:30px;border-radius:9px;font-size:19px}
+  .top h1{font-size:20px;line-height:1.25;letter-spacing:-.4px}
+  .top p{font-size:10px;line-height:1.5;margin-top:5px}
+  .top .eyebrow{font-size:9px;margin-bottom:3px}
+  .actions{gap:6px}
+  .actions .btn{min-height:36px;padding:6px 9px;font-size:11px}
+  .home-stats{gap:8px;margin-bottom:12px}
+  .stat{padding:10px;border-radius:13px}
+  .stat label{font-size:10px}
+  .stat b{font-size:18px;margin:8px 0 3px}
+  .stat small{font-size:9px}
+  .columns{gap:10px}
+  .panel{border-radius:14px}
+  .panel-title{padding:11px 12px;gap:8px}
+  .panel-title h2{font-size:13px}
+  .panel-title .eyebrow{font-size:9px;margin-bottom:3px}
+  .link{font-size:10px}
+  .booking-item{grid-template-columns:36px minmax(0,1fr);padding:10px 8px;gap:7px}
+  .date-badge{width:36px;min-height:41px;border-radius:9px}
+  .date-badge strong{font-size:16px}
+  .date-badge span{font-size:9px}
+  .booking-main h3{font-size:11px;margin-bottom:3px}
+  .meta{font-size:9px;line-height:1.55}
+  .date-detail{font-size:9px;line-height:1.5;margin-top:2px}
+  .pill{font-size:9px;padding:3px 6px;margin-top:4px}
+  .price{gap:7px}
+  .price b{font-size:11px}
+  .price small{font-size:9px}
+  .empty{padding:20px 12px}
+  .reminder{padding:10px 12px;gap:8px}
+  .mobile-nav{height:62px;padding:5px 7px calc(5px + env(safe-area-inset-bottom))}
+  .mobile-nav .nav{gap:2px;padding:5px 2px;font-size:16px}
+  .mobile-nav .nav small{font-size:9px}
+  .toolbar{gap:7px;margin-bottom:10px}
+  .toolbar input,.toolbar select{padding:8px 10px;min-height:38px}
+  .row{padding:10px}
+}
