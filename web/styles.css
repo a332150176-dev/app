@@ -91,3 +91,34 @@ body.dark .price small,body.dark .profit{color:#55d8a0}
   .toolbar input,.toolbar select{padding:8px 10px;min-height:38px}
   .row{padding:10px}
 }
+
+/* Compact expandable booking cards */
+.compact-booking{cursor:pointer}
+.compact-booking:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.expanded-details{margin-top:9px;padding-top:8px;border-top:1px solid var(--line)}
+.expanded-actions{display:flex;gap:6px;margin-top:8px}
+.booking-item .price small{color:var(--muted)}
+/* Hebrew calendar */
+.calendar-view{padding:16px}
+.calendar-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:16px}
+.calendar-head>div{text-align:center}
+.calendar-head b{display:block;font-size:18px}
+.calendar-head small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.calendar-weekdays{margin-bottom:6px}
+.calendar-weekdays span{text-align:center;color:var(--muted);font-size:11px;padding:5px}
+.cal-day{position:relative;min-height:64px;border:1px solid var(--line);border-radius:10px;background:var(--surface,#fff);color:var(--ink,#1c263a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.cal-day .cal-hebrew{font-weight:700;font-size:14px}
+.cal-day small{font-size:9px;color:var(--muted)}
+.cal-day.outside{opacity:.35}
+.cal-day.today{border-color:var(--blue);background:var(--blue-soft,#edf1ff)}
+.cal-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);display:block}
+.calendar-legend{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:10px;margin-top:12px}
+.calendar-selected{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:14px 0 8px;border-top:1px solid var(--line);margin-top:12px}
+.calendar-selected b{font-size:13px}
+.calendar-selected span{font-size:10px;color:var(--muted);flex:1}
+.calendar-booking{width:100%;display:flex;justify-content:space-between;gap:10px;padding:12px;border:1px solid var(--line);border-radius:9px;background:var(--surface,#fff);color:var(--ink,#1c263a);margin-top:7px;text-align:right}
+.calendar-booking b{font-size:11px}
+.calendar-booking span{font-size:10px;color:var(--muted)}
+body.dark .cal-day,body.dark .calendar-booking{background:#192336;color:#edf2fc;border-color:#2a3951}
+@media(max-width:800px){.calendar-view{padding:10px}.calendar-grid{gap:3px}.cal-day{min-height:52px;border-radius:8px}.cal-day .cal-hebrew{font-size:12px}.calendar-head .small{font-size:9px;padding:6px}.calendar-head b{font-size:16px}}
