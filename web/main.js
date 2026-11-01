@@ -71,15 +71,15 @@ function renderCalendar(){
  let end=new Date(start);end.setDate(end.getDate()+1);
  while(sameHebrewMonth(end,calendarAnchor)&&end-start<40*86400000)end.setDate(end.getDate()+1);
  end.setDate(end.getDate()-1);
- const firstWeek=(start.getDay()+6)%7,days=Math.ceil((firstWeek+Math.round((end-start)/86400000)+1)/7)*7;
+ const firstWeek=start.getDay(),days=Math.ceil((firstWeek+Math.round((end-start)/86400000)+1)/7)*7;
  const title=hebrewParts(calendarAnchor);
  let cells='';
  for(let i=0;i<days;i++){
   let d=new Date(start);d.setDate(start.getDate()-firstWeek+i);
   const iso=isoDate(d),items=bookings.filter(b=>b.date===iso),inMonth=sameHebrewMonth(d,calendarAnchor),today=iso===isoDate(new Date());
-  cells+='<button type="button" class="cal-day '+(!inMonth?'outside':'')+' '+(today?'today':'')+'" data-cal-date="'+iso+'"><span class="cal-hebrew">'+esc(hebrewParts(d).day)+'</span><small>'+d.getDate()+'</small>'+(items.length?'<i class="cal-dot" aria-label="'+items.length+' הזמנות"></i>':'')+'</button>';
+  cells+='<button type="button" class="cal-day '+(!inMonth?'outside':'')+' '+(today?'today':'')+'" data-cal-date="'+iso+'"><span class="cal-hebrew">'+esc(hebrewNumeral(hebrewParts(d).day))+'</span><small>'+d.getDate()+'</small>'+(items.length?'<i class="cal-dot" aria-label="'+items.length+' הזמנות"></i>':'')+'</button>';
  }
- root.innerHTML='<div class="calendar-head"><button type="button" class="small" id="cal-prev">חודש קודם ‹</button><div><b>'+esc(title.month)+' '+esc(hebrewNumeral(Number(title.year)%1000))+'</b><small>'+esc(new Intl.DateTimeFormat('he-IL',{month:'long',year:'numeric'}).format(calendarAnchor))+'</small></div><button type="button" class="small" id="cal-next">חודש הבא ›</button></div><div class="calendar-grid calendar-weekdays">'+['ב׳','ג׳','ד׳','ה׳','ו׳','ש׳','א׳'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="calendar-grid">'+cells+'</div><div class="calendar-legend"><i class="cal-dot"></i> יום עם הזמנה</div><div id="calendar-day-results"></div>';
+ root.innerHTML='<div class="calendar-head"><button type="button" class="small" id="cal-prev">חודש קודם ‹</button><div><b>'+esc(title.month)+' '+esc(hebrewNumeral(Number(title.year)%1000))+'</b><small>'+esc(new Intl.DateTimeFormat('he-IL',{month:'long',year:'numeric'}).format(calendarAnchor))+'</small></div><button type="button" class="small" id="cal-next">חודש הבא ›</button></div><div class="calendar-grid calendar-weekdays">'+['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ש׳'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="calendar-grid">'+cells+'</div><div class="calendar-legend"><i class="cal-dot"></i> יום עם הזמנה</div><div id="calendar-day-results"></div>';
  $('cal-prev').onclick=()=>shiftHebrewMonth(-1);$('cal-next').onclick=()=>shiftHebrewMonth(1);
  root.querySelectorAll('[data-cal-date]').forEach(btn=>btn.addEventListener('click',()=>selectCalendarDay(btn.dataset.calDate)));
 }
