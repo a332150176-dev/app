@@ -87,9 +87,9 @@ jobs:
         run: |
           APK="android/app/build/outputs/apk/debug/app-debug.apk"
           SIGNATURE_OUTPUT="$("$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs "$APK")"
-          printf '%s\\n' "$SIGNATURE_OUTPUT"
+          printf '%s\n' "$SIGNATURE_OUTPUT"
           EXPECTED="$(keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey | awk '/SHA256:/ {print $2; exit}' | tr -d ':' | tr '[:upper:]' '[:lower:]')"
-          ACTUAL="$(printf '%s\\n' "$SIGNATURE_OUTPUT" | awk -F': ' '/Signer #1 certificate SHA-256 digest:/ {print $2; exit}' | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')"
+          ACTUAL="$(printf '%s\n' "$SIGNATURE_OUTPUT" | awk -F': ' '/Signer #1 certificate SHA-256 digest:/ {print $2; exit}' | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')"
           echo "Expected committed-key SHA256: $EXPECTED"
           echo "APK signer SHA256: $ACTUAL"
           test -n "$EXPECTED" && test "$EXPECTED" = "$ACTUAL"
