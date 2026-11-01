@@ -83,9 +83,16 @@ jobs:
           keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey | grep -E 'Alias name:|SHA256:'
       - name: Compile debug APK
         run: cd android && ./gradlew --no-daemon assembleDebug
-      - name: Verify APK signature
+      - name: Verify APK signature matches the committed key
         run: |
-          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs android/app/build/outputs/apk/debug/app-debug.apk
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          SIGNATURE_OUTPUT="$("$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs "$APK")"
+          printf '%s\\n' "$SIGNATURE_OUTPUT"
+          EXPECTED="$(keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey | awk '/SHA256:/ {print $2; exit}' | tr -d ':' | tr '[:upper:]' '[:lower:]')"
+          ACTUAL="$(printf '%s\\n' "$SIGNATURE_OUTPUT" | awk -F': ' '/Signer #1 certificate SHA-256 digest:/ {print $2; exit}' | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')"
+          echo "Expected committed-key SHA256: $EXPECTED"
+          echo "APK signer SHA256: $ACTUAL"
+          test -n "$EXPECTED" && test "$EXPECTED" = "$ACTUAL"
       - name: Keep Actions artifact as fallback
         uses: actions/upload-artifact@v4
         with:
