@@ -106,7 +106,7 @@ async function exportExcel(){
   const fileName='kav-leyeshiva-'+new Date().toISOString().slice(0,10)+'.xlsx';
   if(native){
    const base64=XLSX.write(workbook,{bookType:'xlsx',type:'base64',compression:true});
-   const saved=await Filesystem.writeFile({path:fileName,data:base64,directory:Directory.Cache,encoding:Encoding.BASE64});
+   const saved=await Filesystem.writeFile({path:fileName,data:base64,directory:Directory.Cache});
    await Share.share({title:'ייצוא נתוני קו לישיבה',text:'קובץ Excel מוכן. בחר היכן לשמור או לשתף אותו.',files:[saved.uri],dialogTitle:'שמירת קובץ Excel'});
    toast('קובץ Excel נוצר. בחר באפשרות שמירה כדי לשמור אותו במכשיר.','success');
   }else{
