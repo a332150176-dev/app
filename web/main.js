@@ -90,19 +90,33 @@ function selectCalendarDay(iso){
  box.querySelectorAll('[data-cal-booking]').forEach(btn=>btn.onclick=()=>{navigate('bookings');const b=bookings.find(x=>String(x.id)===btn.dataset.calBooking);if(b)openForm(b.id)});
 }
 
-function exportExcel(){
+async function exportExcel(){
  if(!bookings.length){toast('אין הזמנות לייצוא עדיין.');return}
- const rows=bookings.map(b=>({
-  'שם החתן':b.groom||'','תאריך':b.date||'','תאריך עברי':b.date?hebrewDate(b.date):'',
-  'כתובת האולם':b.address||'','שם הנהג':b.driverName||'','טלפון הנהג':b.driverPhone||'',
-  'מחיר חברת ההסעות':cost(b),'תוספת תיווך':markup(b),'סך לישיבה':sales(b),
-  'רווח נקי':net(b),'סטטוס':statuses[b.status]?.[0]||b.status,'הערות':b.notes||''
- }));
- const sheet=XLSX.utils.json_to_sheet(rows);
- sheet['!cols']=[{wch:20},{wch:14},{wch:22},{wch:30},{wch:18},{wch:18},{wch:18},{wch:16},{wch:16},{wch:16},{wch:18},{wch:35}];
- const book=XLSX.utils.book_new();XLSX.utils.book_append_sheet(book,sheet,'הזמנות');
- XLSX.writeFile(book,'kav-leyeshiva-'+new Date().toISOString().slice(0,10)+'.xlsx');
- toast('קובץ Excel הורד בהצלחה.','success')
+ try{
+  const rows=bookings.map(b=>({
+   'שם החתן':b.groom||'','תאריך':b.date||'','תאריך עברי':b.date?hebrewDate(b.date):'',
+   'כתובת האולם':b.address||'','שם הנהג':b.driverName||'','טלפון הנהג':b.driverPhone||'',
+   'מחיר חברת ההסעות':cost(b),'תוספת תיווך':markup(b),'סך לישיבה':sales(b),
+   'רווח נקי':net(b),'סטטוס':statuses[b.status]?.[0]||b.status,'הערות':b.notes||''
+  }));
+  const sheet=XLSX.utils.json_to_sheet(rows);
+  sheet['!cols']=[{wch:20},{wch:14},{wch:22},{wch:30},{wch:18},{wch:18},{wch:18},{wch:16},{wch:16},{wch:16},{wch:18},{wch:35}];
+  const workbook=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook,sheet,'הזמנות');
+  const fileName='kav-leyeshiva-'+new Date().toISOString().slice(0,10)+'.xlsx';
+  if(native){
+   const base64=XLSX.write(workbook,{bookType:'xlsx',type:'base64',compression:true});
+   const saved=await Filesystem.writeFile({path:fileName,data:base64,directory:Directory.Cache,encoding:Encoding.BASE64});
+   await Share.share({title:'ייצוא נתוני קו לישיבה',text:'קובץ Excel מוכן. בחר היכן לשמור או לשתף אותו.',files:[saved.uri],dialogTitle:'שמירת קובץ Excel'});
+   toast('קובץ Excel נוצר. בחר באפשרות שמירה כדי לשמור אותו במכשיר.','success');
+  }else{
+   XLSX.writeFile(workbook,fileName,{compression:true});
+   toast('הורדת קובץ Excel התחילה. בדוק בתיקיית ההורדות.','success');
+  }
+ }catch(err){
+  console.warn('Excel export failed',err);
+  toast('ייצוא Excel נכשל. בדוק הרשאות אחסון ושיתוף ונסה שוב.','error');
+ }
 }
 document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));document.addEventListener('click',e=>{const expand=e.target.closest('[data-expand]');if(expand&&!e.target.closest('button')){const details=expand.querySelector('.expanded-details');if(details)details.hidden=!details.hidden;return}let b=e.target.closest('button');if(!b)return;if(b.dataset.goto)navigate(b.dataset.goto);if(b.dataset.edit)openForm(b.dataset.edit);if(b.dataset.delete)deleteBooking(b.dataset.delete);if(b.dataset.next)nextStatus(b.dataset.next);if(b.dataset.done)driverDone(b.dataset.done)});
 ['add','add2','empty-add'].forEach(id=>$(id).addEventListener('click',()=>openForm()));$('close').addEventListener('click',closeForm);$('cancel').addEventListener('click',closeForm);$('dlg').addEventListener('click',e=>{if(e.target===$('dlg'))closeForm()});$('dlg').addEventListener('cancel',e=>{e.preventDefault();closeForm()});$('form').addEventListener('submit',handleSubmit);$('date').addEventListener('input',updateDatePreview);$('date').addEventListener('change',updateDatePreview);['cost','markup'].forEach(id=>$(id).addEventListener('input',liveProfit));$('search').addEventListener('input',renderBookings);$('filter').addEventListener('change',renderBookings);document.querySelectorAll('[data-theme-choice]').forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.themeChoice)));$('show-hebrew-date').addEventListener('change',()=>{settings.showHebrewDate=$('show-hebrew-date').checked;if(save()){renderHome();renderBookings();renderFinance();toast('העדפת התאריך העברי נשמרה.','success')}});$('notify').addEventListener('change',toggleNotify);$('save-settings').addEventListener('click',saveSettings);$('backup').addEventListener('click',backup);$('backup-top').addEventListener('click',backup);$('restore').addEventListener('click',()=>$('backup-file').click());$('backup-file').addEventListener('change',restore);$('csv').addEventListener('click',exportExcel);$('calendar-add-today').addEventListener('click',()=>openForm('',isoDate(new Date())));document.addEventListener('visibilitychange',()=>{if(!document.hidden&&native)syncNotifications().catch(console.warn)});
