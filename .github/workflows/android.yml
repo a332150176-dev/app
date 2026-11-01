@@ -59,6 +59,28 @@ jobs:
           mkdir -p "$HOME/.android"
           base64 --decode signing/debug.keystore.b64 > "$HOME/.android/debug.keystore"
           chmod 600 "$HOME/.android/debug.keystore"
+      - name: Force the stable signing key for debug APK
+        run: |
+          cat >> android/app/build.gradle <<'EOF'
+
+          // Use the same committed key for every debug APK, not a runner-generated key.
+          android {
+            signingConfigs {
+              stableDebug {
+                storeFile file("${System.getProperty('user.home')}/.android/debug.keystore")
+                storePassword 'android'
+                keyAlias 'androiddebugkey'
+                keyPassword 'android'
+              }
+            }
+            buildTypes {
+              debug {
+                signingConfig signingConfigs.stableDebug
+              }
+            }
+          }
+          EOF
+          keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey | grep -E 'Alias name:|SHA256:'
       - name: Compile debug APK
         run: cd android && ./gradlew --no-daemon assembleDebug
       - name: Verify APK signature
