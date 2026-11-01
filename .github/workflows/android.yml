@@ -37,6 +37,10 @@ jobs:
         run: npx cap add android
       - name: Sync Capacitor
         run: npx cap sync android
+      - name: Set increasing Android version code
+        run: |
+          sed -i -E "s/^([[:space:]]*versionCode[[:space:]]+)[0-9]+/\\1${GITHUB_RUN_NUMBER}/" android/app/build.gradle
+          grep -n 'versionCode' android/app/build.gradle
       - name: Enable exact reminder alarm
         run: |
           python3 - <<'PY'
