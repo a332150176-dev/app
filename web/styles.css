@@ -122,3 +122,46 @@ body.dark .price small,body.dark .profit{color:#55d8a0}
 .calendar-booking span{font-size:10px;color:var(--muted)}
 body.dark .cal-day,body.dark .calendar-booking{background:#192336;color:#edf2fc;border-color:#2a3951}
 @media(max-width:800px){.calendar-view{padding:10px}.calendar-grid{gap:3px}.cal-day{min-height:52px;border-radius:8px}.cal-day .cal-hebrew{font-size:12px}.calendar-head .small{font-size:9px;padding:6px}.calendar-head b{font-size:16px}}
+
+
+/* Native-in-form Hebrew calendar picker */
+.date-picker-trigger{
+  width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;
+  gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;
+  background:var(--surface,#fff);color:var(--ink,#1c263a);text-align:right;
+  font:inherit;font-size:12px;cursor:pointer
+}
+.date-picker-trigger:focus-visible,.picker-day:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.date-picker-trigger span{font-weight:700}
+.date-picker-trigger b{font-size:10px;color:var(--blue);white-space:nowrap}
+.hebrew-picker{margin-top:9px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface,#fff);box-shadow:0 8px 24px #182b5012}
+.hebrew-picker[hidden]{display:none!important}
+.hebrew-picker-head{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-bottom:10px}
+.hebrew-picker-head>div{text-align:center;min-width:0}
+.hebrew-picker-head>div b{display:block;font-size:14px}
+.hebrew-picker-head>div small{display:block;font-size:9px;color:var(--muted);margin-top:3px}
+.hebrew-picker-head .small{white-space:nowrap;padding:7px 8px}
+.hebrew-picker-weekdays,.hebrew-picker-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.hebrew-picker-weekdays{margin-bottom:4px}
+.hebrew-picker-weekdays span{text-align:center;padding:5px 0;color:var(--muted);font-size:10px;font-weight:600}
+.picker-empty{min-height:43px}
+.picker-day{min-width:0;min-height:43px;padding:4px 1px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border:1px solid var(--line);border-radius:8px;background:var(--surface,#fff);color:var(--ink,#1c263a);cursor:pointer}
+.picker-day strong{font-size:13px;line-height:1.2}
+.picker-day small{font-size:9px;color:var(--muted)}
+.picker-day.today{border-color:var(--blue);background:var(--blue-soft,#edf1ff)}
+.picker-day.selected{background:var(--blue);border-color:var(--blue);color:#fff}
+.picker-day.selected small{color:#fff;opacity:.9}
+.hebrew-picker-footer{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:9px;padding-top:8px;border-top:1px solid var(--line)}
+.hebrew-picker-footer span{font-size:9px;color:var(--muted)}
+body.dark .date-picker-trigger,body.dark .hebrew-picker,body.dark .picker-day{background:#192336;color:#edf2fc;border-color:#2a3951}
+body.dark .picker-day.today{background:#29395d;border-color:#83a0ff}
+body.dark .picker-day.selected{background:#83a0ff;color:#101725;border-color:#83a0ff}
+body.dark .picker-day.selected small{color:#101725}
+@media(max-width:390px){
+ .hebrew-picker{padding:7px}
+ .hebrew-picker-weekdays,.hebrew-picker-grid{gap:3px}
+ .picker-day{min-height:39px;border-radius:7px}
+ .picker-day strong{font-size:12px}
+ .hebrew-picker-head>div b{font-size:13px}
+ .hebrew-picker-head .small{font-size:9px;padding:6px}
+}
