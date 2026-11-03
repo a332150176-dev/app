@@ -25,7 +25,7 @@ function longDate(s){let d=dayDate(s);return d?new Intl.DateTimeFormat('he-IL',{
 function hebrewNumeral(value){let n=Number(value);if(!Number.isInteger(n)||n<1||n>9999)return String(value);let out='';const hundreds=[[400,'ת'],[300,'ש'],[200,'ר'],[100,'ק']];for(const [v,l] of hundreds){while(n>=v){out+=l;n-=v}}if(n>=10&&n<=19){const special={15:'טו',16:'טז'};if(special[n]){out+=special[n];n=0}}const tens=[[90,'צ'],[80,'פ'],[70,'ע'],[60,'ס'],[50,'נ'],[40,'מ'],[30,'ל'],[20,'כ'],[10,'י']];for(const [v,l] of tens){if(n>=v){out+=l;n-=v}}const ones={9:'ט',8:'ח',7:'ז',6:'ו',5:'ה',4:'ד',3:'ג',2:'ב',1:'א'};if(n)out+=ones[n]||'';if(out.length===1)return out+'׳';return out.slice(0,-1)+'״'+out.slice(-1)}
 function hebrewDate(s){let d=dayDate(s);if(!d)return '—';try{let parts=new Intl.DateTimeFormat('he-IL-u-ca-hebrew',{day:'numeric',month:'long',year:'numeric'}).formatToParts(d),get=t=>parts.find(p=>p.type===t)?.value||'';return hebrewNumeral(get('day'))+' '+get('month')+' '+hebrewNumeral(Number(get('year'))%1000)}catch{return '—'}}
 function dateDetails(s){if(!s)return '';let heb=settings.showHebrewDate?'<span class="hebrew-date">תאריך עברי: '+esc(hebrewDate(s))+'</span>':'';return '<span class="date-detail">'+heb+'<span>תאריך לועזי: '+esc(longDate(s))+'</span></span>'}
-function updateDatePreview(){let s=$('date').value;$('date-preview').innerHTML=s?'<span class="hebrew-date">תאריך עברי: '+esc(hebrewDate(s))+'</span><span>תאריך לועזי: '+esc(longDate(s))+'</span>':'בחר תאריך כדי לראות את התאריך העברי והלועזי'}
+function updateDatePreview(){let s=$('date').value;$('date-preview').innerHTML=s?'<span class="hebrew-date">תאריך עברי: '+esc(hebrewDate(s))+'</span><span>תאריך לועזי: '+esc(longDate(s))+'</span>':'בחר תאריך כדי לראות את התאריך העברי והלועזי';$('date-picker-value').textContent=s?hebrewDate(s)+' · '+longDate(s):'בחר תאריך עברי';}
 function until(s){let d=dayDate(s),n=new Date();if(!d)return 9999;n.setHours(0,0,0,0);d.setHours(0,0,0,0);return Math.round((d-n)/864e5)}
 function upcoming(){return bookings.filter(b=>b.date&&until(b.date)>=0&&!['completed','paid'].includes(b.status)).sort((a,b)=>a.date.localeCompare(b.date))}
 function dateBadge(s){let d=dayDate(s);if(settings.showHebrewDate&&d){try{let parts=new Intl.DateTimeFormat('he-IL-u-ca-hebrew',{day:'numeric',month:'short'}).formatToParts(d),rawDay=parts.find(p=>p.type==='day')?.value||d.getDate(),day=hebrewNumeral(rawDay),month=parts.find(p=>p.type==='month')?.value||'';return '<div class="date-badge"><strong>'+esc(day)+'</strong><span>'+esc(month)+'</span></div>'}catch{}}return '<div class="date-badge"><strong>'+(d?d.getDate():'—')+'</strong><span>'+esc(date(s).split(' ')[1]||'')+'</span></div>'}
@@ -43,7 +43,7 @@ function applyTheme(){let mode=settings.theme||'system',dark=mode==='dark'||(mod
 function setTheme(mode){settings.theme=['system','light','dark'].includes(mode)?mode:'system';applyTheme();save();toast('מצב התצוגה נשמר.','success')}
 function closeForm(){let dlg=$('dlg');if(dlg.open)dlg.close();if(page!==pageBeforeForm)navigate(pageBeforeForm)}
 function liveProfit(){let c=+$('cost').value||0,m=+$('markup').value||0;$('live-sales').textContent=fmt(c+m);$('live-gross').textContent=fmt(m);$('live-net').textContent=fmt(m)}
-function openForm(id='',presetDate=''){ pageBeforeForm=page; $('form').reset();$('id').value='';$('status').value='new';$('dlg-title').textContent=id?'עריכת הזמנה':'הזמנה חדשה';if(id){let b=bookings.find(x=>String(x.id)===String(id));if(!b)return;for(let [field,key] of Object.entries({groom:'groom',date:'date',address:'address',driver:'driverName',phone:'driverPhone',cost:'companyCost',markup:'markup',status:'status',notes:'notes'}))$(field).value=b[key]??''; $('id').value=b.id}else{let d=presetDate?new Date(presetDate+'T12:00:00'):new Date();if(!presetDate)d.setDate(d.getDate()+7);$('date').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}liveProfit();updateDatePreview();$('dlg').showModal()}
+function openForm(id='',presetDate=''){ pageBeforeForm=page; $('form').reset();$('id').value='';$('status').value='new';$('dlg-title').textContent=id?'עריכת הזמנה':'הזמנה חדשה';if(id){let b=bookings.find(x=>String(x.id)===String(id));if(!b)return;for(let [field,key] of Object.entries({groom:'groom',date:'date',address:'address',driver:'driverName',phone:'driverPhone',cost:'companyCost',markup:'markup',status:'status',notes:'notes'}))$(field).value=b[key]??''; $('id').value=b.id}else{let d=presetDate?new Date(presetDate+'T12:00:00'):new Date();if(!presetDate)d.setDate(d.getDate()+7);$('date').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}closeHebrewPicker();liveProfit();updateDatePreview();$('dlg').showModal()}
 function formValues(){let v=id=>$(id).value.trim();return {id:v('id')||'b'+Date.now()+Math.floor(Math.random()*999),groom:v('groom'),date:v('date'),address:v('address'),driverName:v('driver'),driverPhone:v('phone'),companyCost:mround(v('cost')),markup:mround(v('markup')),status:v('status'),notes:v('notes'),updatedAt:new Date().toISOString()}}
 function handleSubmit(e){e.preventDefault();let b=formValues();if([b.companyCost,b.markup].some(x=>!Number.isFinite(x)||x<0)){toast('המחירים צריכים להיות מספרים חיוביים או אפס.','error');return}let i=bookings.findIndex(x=>String(x.id)===String(b.id));if(i>=0){b.createdAt=bookings[i].createdAt;bookings[i]=b}else{b.createdAt=new Date().toISOString();bookings.push(b)}if(save()){ closeForm();render();toast(i>=0?'ההזמנה עודכנה.':'ההזמנה נשמרה.','success');syncNotifications().catch(console.warn)}}
 async function deleteBooking(id){let b=bookings.find(x=>String(x.id)===String(id));if(!b)return;if(!confirm('למחוק את ההזמנה של '+b.groom+'? הפעולה אינה ניתנת לביטול.'))return;bookings=bookings.filter(x=>String(x.id)!==String(id));if(save()){render();toast('ההזמנה נמחקה.','success');syncNotifications().catch(console.warn)}}
@@ -63,6 +63,51 @@ let calendarAnchor=new Date();calendarAnchor.setHours(12,0,0,0);
 function hebrewParts(d){return new Intl.DateTimeFormat('he-IL-u-ca-hebrew',{day:'numeric',month:'long',year:'numeric'}).formatToParts(d).reduce((o,p)=>(o[p.type]=p.value,o),{})}
 function isoDate(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function sameHebrewMonth(a,b){let x=hebrewParts(a),y=hebrewParts(b);return x.month===y.month&&x.year===y.year}
+function hebrewMonthBounds(anchor){
+ let first=new Date(anchor);first.setHours(12,0,0,0);
+ while(true){let prev=new Date(first);prev.setDate(prev.getDate()-1);if(!sameHebrewMonth(prev,anchor))break;first=prev}
+ let last=new Date(first);
+ while(true){let next=new Date(last);next.setDate(next.getDate()+1);if(!sameHebrewMonth(next,anchor))break;last=next}
+ return {first,last};
+}
+let hebrewPickerAnchor=new Date();
+function openHebrewPicker(){
+ hebrewPickerAnchor=dayDate($('date').value)||new Date();
+ hebrewPickerAnchor.setHours(12,0,0,0);
+ renderHebrewPicker();
+ $('hebrew-picker').hidden=false;
+}
+function closeHebrewPicker(){const root=$('hebrew-picker');if(root)root.hidden=true}
+function shiftHebrewPickerMonth(delta){
+ const {first,last}=hebrewMonthBounds(hebrewPickerAnchor);
+ hebrewPickerAnchor=new Date(delta<0?first:last);hebrewPickerAnchor.setHours(12,0,0,0);
+ hebrewPickerAnchor.setDate(hebrewPickerAnchor.getDate()+(delta<0?-1:1));
+ renderHebrewPicker();
+}
+function renderHebrewPicker(){
+ const root=$('hebrew-picker');if(!root)return;
+ const {first,last}=hebrewMonthBounds(hebrewPickerAnchor);
+ const title=hebrewParts(hebrewPickerAnchor),count=Math.round((last-first)/86400000)+1,offset=first.getDay();
+ const total=Math.ceil((offset+count)/7)*7,selected=$('date').value,today=isoDate(new Date());
+ let cells='';
+ for(let i=0;i<total;i++){
+  const day=i-offset+1;
+  if(day<1||day>count){cells+='<span class="picker-empty" aria-hidden="true"></span>';continue}
+  const d=new Date(first);d.setDate(first.getDate()+day-1);
+  const iso=isoDate(d),parts=hebrewParts(d);
+  cells+='<button type="button" class="picker-day '+(iso===selected?'selected ':'')+(iso===today?'today':'')+'" data-picker-date="'+iso+'" aria-label="'+esc(hebrewDate(iso))+' — '+esc(longDate(iso))+'"><strong>'+esc(hebrewNumeral(parts.day))+'</strong><small>'+d.getDate()+'</small></button>';
+ }
+ root.innerHTML='<div class="hebrew-picker-head"><button type="button" class="small" id="hebrew-picker-prev" aria-label="חודש עברי קודם">‹ הקודם</button><div><b>'+esc(title.month)+' '+esc(hebrewNumeral(Number(title.year)%1000))+'</b><small>'+esc(new Intl.DateTimeFormat('he-IL',{month:'long',year:'numeric'}).format(first))+'</small></div><button type="button" class="small" id="hebrew-picker-next" aria-label="חודש עברי הבא">הבא ›</button></div><div class="hebrew-picker-weekdays">'+['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ש׳'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="hebrew-picker-grid">'+cells+'</div><div class="hebrew-picker-footer"><span>היום העברי מסומן באותיות</span><button type="button" class="small" id="hebrew-picker-close">סגירה</button></div>';
+ $('hebrew-picker-prev').onclick=()=>shiftHebrewPickerMonth(-1);
+ $('hebrew-picker-next').onclick=()=>shiftHebrewPickerMonth(1);
+ $('hebrew-picker-close').onclick=closeHebrewPicker;
+ root.querySelectorAll('[data-picker-date]').forEach(btn=>btn.addEventListener('click',()=>selectHebrewDate(btn.dataset.pickerDate)));
+}
+function selectHebrewDate(iso){
+ $('date').value=iso;
+ updateDatePreview();
+ closeHebrewPicker();
+}
 function shiftHebrewMonth(delta){calendarAnchor=new Date(calendarAnchor);calendarAnchor.setDate(calendarAnchor.getDate()+delta*30);renderCalendar()}
 function renderCalendar(){
  const root=$('calendar-view');if(!root)return;
@@ -119,5 +164,5 @@ async function exportExcel(){
  }
 }
 document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));document.addEventListener('click',e=>{const expand=e.target.closest('[data-expand]');if(expand&&!e.target.closest('button')){const details=expand.querySelector('.expanded-details');if(details)details.hidden=!details.hidden;return}let b=e.target.closest('button');if(!b)return;if(b.dataset.goto)navigate(b.dataset.goto);if(b.dataset.edit)openForm(b.dataset.edit);if(b.dataset.delete)deleteBooking(b.dataset.delete);if(b.dataset.next)nextStatus(b.dataset.next);if(b.dataset.done)driverDone(b.dataset.done)});
-['add','add2','empty-add'].forEach(id=>$(id).addEventListener('click',()=>openForm()));$('close').addEventListener('click',closeForm);$('cancel').addEventListener('click',closeForm);$('dlg').addEventListener('click',e=>{if(e.target===$('dlg'))closeForm()});$('dlg').addEventListener('cancel',e=>{e.preventDefault();closeForm()});$('form').addEventListener('submit',handleSubmit);$('date').addEventListener('input',updateDatePreview);$('date').addEventListener('change',updateDatePreview);['cost','markup'].forEach(id=>$(id).addEventListener('input',liveProfit));$('search').addEventListener('input',renderBookings);$('filter').addEventListener('change',renderBookings);document.querySelectorAll('[data-theme-choice]').forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.themeChoice)));$('show-hebrew-date').addEventListener('change',()=>{settings.showHebrewDate=$('show-hebrew-date').checked;if(save()){renderHome();renderBookings();renderFinance();toast('העדפת התאריך העברי נשמרה.','success')}});$('notify').addEventListener('change',toggleNotify);$('save-settings').addEventListener('click',saveSettings);$('backup').addEventListener('click',backup);$('backup-top').addEventListener('click',backup);$('restore').addEventListener('click',()=>$('backup-file').click());$('backup-file').addEventListener('change',restore);$('csv').addEventListener('click',exportExcel);$('calendar-add-today').addEventListener('click',()=>openForm('',isoDate(new Date())));document.addEventListener('visibilitychange',()=>{if(!document.hidden&&native)syncNotifications().catch(console.warn)});
+['add','add2','empty-add'].forEach(id=>$(id).addEventListener('click',()=>openForm()));$('close').addEventListener('click',closeForm);$('cancel').addEventListener('click',closeForm);$('dlg').addEventListener('click',e=>{if(e.target===$('dlg'))closeForm()});$('dlg').addEventListener('cancel',e=>{e.preventDefault();closeForm()});$('form').addEventListener('submit',handleSubmit);$('date-picker-open').addEventListener('click',()=>{if($('hebrew-picker').hidden)openHebrewPicker();else closeHebrewPicker()});['cost','markup'].forEach(id=>$(id).addEventListener('input',liveProfit));$('search').addEventListener('input',renderBookings);$('filter').addEventListener('change',renderBookings);document.querySelectorAll('[data-theme-choice]').forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.themeChoice)));$('show-hebrew-date').addEventListener('change',()=>{settings.showHebrewDate=$('show-hebrew-date').checked;if(save()){renderHome();renderBookings();renderFinance();toast('העדפת התאריך העברי נשמרה.','success')}});$('notify').addEventListener('change',toggleNotify);$('save-settings').addEventListener('click',saveSettings);$('backup').addEventListener('click',backup);$('backup-top').addEventListener('click',backup);$('restore').addEventListener('click',()=>$('backup-file').click());$('backup-file').addEventListener('change',restore);$('csv').addEventListener('click',exportExcel);$('calendar-add-today').addEventListener('click',()=>openForm('',isoDate(new Date())));document.addEventListener('visibilitychange',()=>{if(!document.hidden&&native)syncNotifications().catch(console.warn)});
 applyTheme();render();if(native){syncNotifications().catch(console.warn);App.addListener('backButton',({canGoBack})=>{if($('dlg').open){closeForm();return}if(page!=='home'){navigate('home');return}if(canGoBack)window.history.back();else App.exitApp()}).catch(console.warn)}
