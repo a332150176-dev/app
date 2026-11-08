@@ -165,3 +165,36 @@ body.dark .picker-day.selected small{color:#101725}
  .hebrew-picker-head>div b{font-size:13px}
  .hebrew-picker-head .small{font-size:9px;padding:6px}
 }
+
+/* City-based transport price list */
+.city-prices-panel{margin-bottom:16px}
+.city-price-editor{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr) auto;gap:10px;align-items:end;padding:0 18px 15px}
+.city-price-editor .field{margin:0}
+.city-price-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.city-price-actions .btn{min-height:40px;padding:8px 12px;font-size:10px;white-space:nowrap}
+.city-price-list{border-top:1px solid var(--line)}
+.city-price-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:14px;padding:11px 18px;border-bottom:1px solid var(--line)}
+.city-price-row:last-child{border-bottom:0}
+.city-price-name{min-width:0}
+.city-price-name b{display:block;font-size:12px;overflow-wrap:anywhere}
+.city-price-name small{display:block;margin-top:3px;font-size:9px;color:var(--muted)}
+.city-price-row>strong{font-size:12px;white-space:nowrap}
+.city-price-row .city-price-actions{justify-content:flex-end}
+.city-price-row .city-price-actions .small{min-width:48px}
+body.dark .city-price-row{border-color:#2a3951}
+body.dark .city-price-row .small{background:#192336;color:#edf2fc;border-color:#2a3951}
+body.dark .city-price-editor .field input{background:#192336;color:#edf2fc;border-color:#2a3951}
+@media(max-width:800px){
+ .city-price-editor{grid-template-columns:1fr 1fr;padding:0 14px 13px}
+ .city-price-editor .city-price-actions{grid-column:1/-1}
+ .city-price-editor .city-price-actions .btn{flex:1}
+ .city-price-row{padding:10px 14px;gap:9px}
+}
+@media(max-width:390px){
+ .city-price-editor{padding-inline:12px;gap:8px}
+ .city-price-editor .field input{padding:9px 10px}
+ .city-price-row{grid-template-columns:minmax(0,1fr) auto;padding:10px 12px}
+ .city-price-row>strong{font-size:11px}
+ .city-price-row .city-price-actions{grid-column:1/-1;justify-content:flex-start}
+ .city-price-row .city-price-actions .small{min-height:32px}
+}
