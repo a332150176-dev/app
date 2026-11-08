@@ -57,8 +57,7 @@ function renderCityPrices(){
 }
 function fillCostFromCity(){
  const city=$('city').value.trim();if(!city)return;
- const entry=findCityPrice(city);
- if(!entry){toast('אין מחיר מוגדר לעיר הזאת. אפשר להזין מחיר ידנית או להוסיף אותה למחירון.');return}
+ const entry=findCityPrice(city);if(!entry)return;
  $('cost').value=String(entry.price);liveProfit();toast('מחיר האוטובוס ל'+entry.name+' נטען מהמחירון.','success');
 }
 function editCityPrice(city){
