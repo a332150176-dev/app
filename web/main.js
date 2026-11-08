@@ -45,7 +45,7 @@ function applyTheme(){let mode=settings.theme||'system',dark=mode==='dark'||(mod
 function setTheme(mode){settings.theme=['system','light','dark'].includes(mode)?mode:'system';applyTheme();save();toast('מצב התצוגה נשמר.','success')}
 function closeForm(){let dlg=$('dlg');if(dlg.open)dlg.close();if(page!==pageBeforeForm)navigate(pageBeforeForm)}
 function liveProfit(){let c=+$('cost').value||0,m=+$('markup').value||0;$('live-sales').textContent=fmt(c+m);$('live-gross').textContent=fmt(m);$('live-net').textContent=fmt(m)}
-function normalizeCity(value){return String(value||'').trim().replace(/\\s+/g,' ').toLocaleLowerCase('he-IL')}
+function normalizeCity(value){return String(value||'').trim().replace(/\s+/g,' ').toLocaleLowerCase('he-IL')}
 function findCityPrice(city){const key=normalizeCity(city);if(!key)return null;const entry=Object.entries(settings.cityPrices||{}).find(([name])=>normalizeCity(name)===key);return entry?{name:entry[0],price:Number(entry[1])}:null}
 function openBookingsForCity(city){const key=normalizeCity(city);return bookings.filter(b=>key&&normalizeCity(b.city)===key&&!['completed','paid'].includes(b.status))}
 function renderCityPrices(){
@@ -75,7 +75,7 @@ function saveCityPrice(){
  const existing=findCityPrice(city),oldPrice=existing?mround(existing.price):null,affected=openBookingsForCity(city);
  let updateOpen=false;
  if(affected.length&&(oldPrice===null||oldPrice!==mround(price))){
-  updateOpen=confirm('נמצאו '+affected.length+' הזמנות פתוחות בעיר '+city+'.\\nמחיר האוטובוס החדש הוא '+fmt(price)+'.\\nלעדכן גם את כל ההזמנות הפתוחות בעיר הזאת? הזמנות שהסתיימו או שולמו לא ישתנו.');
+  updateOpen=confirm('נמצאו '+affected.length+' הזמנות פתוחות בעיר '+city+'.\nמחיר האוטובוס החדש הוא '+fmt(price)+'.\nלעדכן גם את כל ההזמנות הפתוחות בעיר הזאת? הזמנות שהסתיימו או שולמו לא ישתנו.');
  }
  const cityName=existing?.name||city;
  settings.cityPrices={...settings.cityPrices,[cityName]:mround(price)};
